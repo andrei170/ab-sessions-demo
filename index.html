@@ -1,0 +1,261 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB Sessions Plumbing and Building - Concept</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14181c; --mut:#57616c; --line:#e2e6ec; --bg:#f8fafb; --panel:#fff;
+  --deep:#12283f; --deep2:#1d3b58; --acc:#2f6fbf; --acc2:#7fb4e3; --ok:#1f7a45;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Bitter,Georgia,serif;font-weight:700;line-height:1.16;letter-spacing:-.014em;text-wrap:balance}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.demobar{background:#0d1117;color:#e6edf3;font-size:12.5px;text-align:center;padding:8px 14px}
+.demobar b{color:#f0b13c}
+.urg{background:#8a1c1c;color:#fff;text-align:center;font-size:13.5px;padding:9px;font-weight:500}
+.urg a{color:#fff}
+nav{position:sticky;top:0;z-index:60;background:rgba(248,250,251,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navin{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0}
+.logo{font-family:Bitter,serif;font-weight:700;font-size:19px}
+.logo span{color:var(--acc)}
+.navl{display:flex;gap:20px;font-size:14.5px;font-weight:500}
+.navl a{color:var(--mut);text-decoration:none}.navl a:hover{color:var(--deep2)}
+.navl a.on{color:var(--deep2);font-weight:700}
+.call{display:inline-flex;align-items:center;gap:8px;background:var(--deep2);color:#fff;text-decoration:none;font-weight:600;font-size:14.5px;padding:10px 17px;border-radius:8px;white-space:nowrap}
+@media(max-width:900px){.navl{display:none}}
+.hero{position:relative;background:linear-gradient(155deg,var(--deep),var(--deep2));color:#eef3f8;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;opacity:.13;
+  background:repeating-linear-gradient(78deg,transparent 0 38px,rgba(255,255,255,.55) 38px 40px),
+             repeating-linear-gradient(-12deg,transparent 0 38px,rgba(255,255,255,.3) 38px 39px)}
+.heroin{position:relative;z-index:2;display:grid;grid-template-columns:1.06fr .94fr;gap:42px;align-items:center;padding:56px 0 62px}
+@media(max-width:980px){.heroin{grid-template-columns:1fr;gap:28px;padding:38px 0 44px}}
+.eyeb{display:inline-block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--acc2);border:1px solid rgba(255,255,255,.28);padding:5px 12px;border-radius:999px;margin-bottom:17px}
+.hero h1{font-size:clamp(31px,5vw,48px);margin-bottom:14px}
+.hero h1 em{font-style:normal;color:var(--acc2)}
+.hero .lede{font-size:17px;color:#c6d3df;max-width:520px}
+.ticks{list-style:none;margin-top:20px;display:grid;gap:9px}
+.ticks li{display:flex;gap:10px;font-size:15.5px;color:#dde6ee}
+.ticks svg{flex:0 0 18px;margin-top:4px;fill:var(--acc2)}
+.form{background:var(--panel);border-radius:14px;padding:24px;box-shadow:0 20px 54px rgba(0,0,0,.3);color:var(--ink)}
+.form h3{font-size:20px;margin-bottom:4px}
+.form .fs{font-size:13.5px;color:var(--mut);margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin:12px 0 5px}
+select,input{width:100%;font-family:inherit;font-size:15px;color:var(--ink);background:#fbfcfd;border:1px solid var(--line);border-radius:8px;padding:11px 12px}
+select:focus,input:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:transparent}
+.chk{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chk label{display:inline-flex;align-items:center;gap:7px;margin:0;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#fbfcfd;font-size:13.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer}
+.chk input{width:auto;padding:0;margin:0}
+.btn{width:100%;margin-top:18px;background:var(--acc);color:#fff;border:0;border-radius:9px;padding:14px;font-family:Bitter,serif;font-size:16px;font-weight:700;cursor:pointer}
+.btn:hover{filter:brightness(.88)}
+.hint{font-size:12px;color:var(--mut);margin-top:10px;text-align:center}
+.out{display:none;margin-top:15px;border-radius:10px;padding:15px 16px;font-size:14.5px;border:1px solid}
+.out.show{display:block}
+.out b{display:block;font-family:Bitter,serif;font-size:16.5px;margin-bottom:5px}
+.o-hi{background:#eef6f0;border-color:#bedcc6;color:#1d5734}
+.o-md{background:#fdf6ea;border-color:#ecdcb2;color:#775413}
+.o-lo{background:#f3f5f7;border-color:#dde2e7;color:#48515a}
+.o-urg{background:#fdeeee;border-color:#f0c6c4;color:#8a1c1c}
+.trust{background:#0e141a;color:#b6c2cd;padding:15px 0}
+.trustin{display:flex;flex-wrap:wrap;justify-content:center;gap:11px 34px;font-size:13.5px}
+.trustin b{color:var(--acc2);font-weight:700}
+section{padding:58px 0}
+.sh{text-align:center;max-width:680px;margin:0 auto 34px}
+.sh .kick{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);font-weight:700;margin-bottom:10px}
+.sh h2{font-size:clamp(25px,3.4vw,33px);margin-bottom:11px}
+.sh p{color:var(--mut);font-size:16.5px}
+.band{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:17px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.ctop{height:100px;position:relative;background:linear-gradient(140deg,var(--deep),var(--deep2))}
+.ctop::after{content:"";position:absolute;inset:0;opacity:.24;background:repeating-linear-gradient(78deg,transparent 0 15px,rgba(255,255,255,.5) 15px 16px)}
+.cbody{padding:17px}.cbody h3{font-size:18px;margin-bottom:6px}
+.cbody p{font-size:14.5px;color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:24px}
+.box.pri{background:linear-gradient(160deg,var(--deep),var(--deep2));color:#eef3f8;border-color:var(--deep2)}
+.box h3{font-size:20px;margin-bottom:10px}
+.box ul{margin:0 0 0 19px;font-size:15px;color:var(--mut)}
+.box.pri ul{color:#c6d3df}
+.box li{margin-bottom:8px}
+.tagp{display:inline-block;font-size:11px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;background:var(--acc2);color:#0e1a26;padding:4px 10px;border-radius:999px;margin-bottom:12px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:16px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+.fact .k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);font-weight:700;margin-bottom:7px}
+.fact .v{font-family:Bitter,serif;font-size:22px;font-weight:700;color:var(--deep2)}
+.fact .n{font-size:13.5px;color:var(--mut);margin-top:5px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:22px;counter-reset:s}
+.step{counter-increment:s;position:relative;padding-left:50px}
+.step::before{content:counter(s);position:absolute;left:0;top:0;width:37px;height:37px;border-radius:50%;background:var(--deep2);color:#fff;font-family:Bitter,serif;font-weight:700;font-size:17px;display:grid;place-items:center}
+.step h3{font-size:17.5px;margin-bottom:5px}.step p{font-size:14.5px;color:var(--mut)}
+.revs{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:17px}
+.rev{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:20px}
+.stars{color:#e0a32e;font-size:15.5px;letter-spacing:2px}
+.rev p{font-size:14.8px;color:var(--mut);margin:9px 0 12px;font-style:italic}
+.rev .who{font-size:13.5px;font-weight:700}
+.rev .who span{display:block;font-weight:400;color:var(--mut);font-size:12.5px;margin-top:2px}
+.ratebar{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+.ratebig{font-family:Bitter,serif;font-size:42px;font-weight:700;color:var(--deep2)}
+.ratetxt{font-size:14.5px;color:var(--mut);text-align:left}
+.badges{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.bdg{background:var(--panel);border:1px dashed #b9c3d1;border-radius:11px;padding:14px 20px;text-align:center;min-width:140px}
+.bdg b{display:block;font-family:Bitter,serif;font-size:16px;color:var(--deep2)}
+.bdg span{font-size:11.5px;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
+.areas{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:20px}
+.areas span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:14px;color:var(--mut)}
+.cta2{background:linear-gradient(155deg,var(--deep),var(--deep2));color:#eef3f8;text-align:center;padding:58px 0}
+.cta2 h2{font-size:clamp(25px,3.4vw,33px);margin-bottom:11px}
+.cta2 p{color:#c6d3df;font-size:16.5px;max-width:560px;margin:0 auto 22px}
+.cta2 .call{font-size:16px;padding:14px 26px;background:var(--acc2);color:#0e1a26}
+footer{background:#0b1016;color:#87929d;font-size:13.5px;padding:32px 0}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+footer h4{color:#e7edf3;font-size:12.5px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:10px}
+footer a{color:#87929d;text-decoration:none;display:block;margin-bottom:6px}
+footer a:hover{color:var(--acc2)}
+.fnote{border-top:1px solid #1b232c;padding-top:18px;margin-top:20px;font-size:12.5px;color:#6b7681;line-height:1.65}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+<div class="demobar">Concept only &middot; built by AG1 Consulting for discussion &middot; not a live site &middot; every figure below is illustrative</div>
+
+<nav><div class="navin">
+  <div class="logo">AB Sessions <span style="opacity:.7">Plumbing &amp; Building</span></div>
+  <div class="navl"><a href="#emergency">Emergency</a><a href="#plumbing">Plumbing &amp; Heating</a><a href="#building">Building</a><a href="#areas">Areas</a></div>
+  <a class="call" href="tel:07710280062">07710 280062</a>
+</div></nav>
+
+<div class="hero"><div class="heroin">
+  <div class="eyeb">Swadlincote &middot; Derbyshire, Staffordshire &amp; Leicestershire</div>
+  <h1>Plumbing, heating and building work &mdash; a family firm in Swadlincote since 1991</h1>
+  <p class="sh">From a dripping tap to a full extension, done by the same family that has been doing it here for
+  thirty-five years. No call-out charge. Available for emergencies around the clock.</p>
+  <div class="badges">
+    <span class="bdg">Established 1991</span>
+    <span class="bdg">Family run</span>
+    <span class="bdg">No call-out charge</span>
+    <span class="bdg">24/7 emergencies</span>
+  </div>
+  <a class="btn" href="#form">Get a quote</a>
+  <div class="hint">Burst pipe or no heating? Ring &mdash; do not fill in a form</div>
+</div></div>
+
+<div class="trust"><div class="trustin">
+  <div class="fact"><b>1991</b><span>trading in Swadlincote since</span></div>
+  <div class="fact"><b>3</b><span>counties covered</span></div>
+  <div class="fact"><b>&pound;0</b><span>call-out charge</span></div>
+  <div class="fact"><b>24/7</b><span>for genuine emergencies</span></div>
+</div></div>
+
+<section id="emergency" class="band"><div class="wrap">
+  <h2>Something has gone wrong right now</h2>
+  <div class="two">
+    <div class="box"><h3>Ring us</h3><p>Burst pipe, no heating, no hot water, leaking roof, blocked or broken toilet.
+    <b>Do not fill in a form for this.</b> Pick up the phone and we will tell you honestly how soon we can be
+    there.</p>
+    <p style="margin-top:10px"><a class="btn" href="tel:07710280062">07710 280062</a></p></div>
+    <div class="box"><h3>What it costs</h3><p><b>No call-out charge.</b> You pay for the work quoted, and we tell you
+    the number before we start it. If it turns out to be a ten-minute job, it is charged as a ten-minute job.</p></div>
+  </div>
+</div></section>
+
+<section id="plumbing"><div class="wrap">
+  <h2>Plumbing &amp; Heating</h2>
+  <div class="cards">
+    <div class="card"><div class="ctop">Repairs</div><div class="cbody">
+      <p>Leaking taps, burst pipes, failing valves, blockages and the things that only ever go wrong on a Sunday.</p>
+    </div></div>
+    <div class="card"><div class="ctop">Heating systems</div><div class="cbody">
+      <p>Full central heating installation, replacement and servicing &mdash; and honest advice on whether yours needs
+      replacing or just fixing.</p>
+    </div></div>
+    <div class="card"><div class="ctop">Bathrooms</div><div class="cbody">
+      <p>Complete bathroom fitting, including the tiling and the making-good, by the same team rather than four
+      different trades.</p>
+    </div></div>
+  </div>
+</div></section>
+
+<section id="building" class="band"><div class="wrap">
+  <h2>Building Work</h2>
+  <p class="sh">This is the side most people do not know we do, and it is half the business.</p>
+  <div class="cards">
+    <div class="card"><div class="ctop">Extensions</div><div class="cbody">
+      <p>Single and two-storey extensions, from the first conversation to the last coat of paint.</p>
+      <ul class="ticks"><li>One firm, start to finish</li><li>Written quote before anything begins</li><li>We tell you what it will actually cost</li></ul>
+    </div></div>
+    <div class="card"><div class="ctop">Loft &amp; garage conversions</div><div class="cbody">
+      <p>Turning space you already own into a room you will use, without moving house.</p>
+      <ul class="ticks"><li>Plumbing and building under one roof</li><li>No subcontractor chains</li><li>Same family on site throughout</li></ul>
+    </div></div>
+    <div class="card"><div class="ctop">Kitchens &amp; interiors</div><div class="cbody">
+      <p>Bespoke kitchens, tiling, decorating and the finishing work that decides whether a job looks right.</p>
+    </div></div>
+    <div class="card"><div class="ctop">Outside</div><div class="cbody">
+      <p>Hard landscaping, block paving, roof work and gutters.</p>
+    </div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Why a plumber who also builds is worth having</h2>
+  <div class="two">
+    <div class="box"><h3>One firm, one number</h3><p>On an extension or a bathroom, the plumbing and the building
+    usually belong to two different companies who blame each other. <b>Here they do not.</b></p></div>
+    <div class="box"><h3>Thirty-five years in one town</h3><p>We are not going anywhere, and everyone locally knows
+    where to find us. That is worth more than any guarantee written on a leaflet.</p></div>
+  </div>
+</div></section>
+
+<section id="areas" class="band"><div class="wrap">
+  <h2>Where we work</h2>
+  <p class="sh">Swadlincote and out across three counties &mdash; a page like this for each of the main towns.</p>
+  <div class="areas">
+    <span>Swadlincote</span><span>Burton upon Trent</span><span>Ashby-de-la-Zouch</span><span>Melbourne</span>
+    <span>Repton</span><span>Castle Gresley</span><span>Overseal</span><span>Measham</span>
+    <span>Woodville</span><span>Hartshorne</span><span>Newhall</span><span>Willington</span>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>How a job runs</h2>
+  <div class="steps">
+    <div class="step"><b>1. Tell us what it is</b><span>Ring for anything urgent, or send the details for planned work</span></div>
+    <div class="step"><b>2. We come and look</b><span>No charge for coming out to see what the job actually involves</span></div>
+    <div class="step"><b>3. A written quote</b><span>The price and what it covers, before any work starts</span></div>
+    <div class="step"><b>4. We do it</b><span>Our own people, and we clear up after ourselves</span></div>
+  </div>
+</div></section>
+
+<section id="form"><div class="wrap">
+  <h2>Get a quote</h2>
+  <div class="form">
+    <label>Name<input type="text" placeholder="Your name"></label>
+    <label>Phone<input type="tel" placeholder="07..."></label>
+    <label>Town or postcode<input type="text" placeholder="DE11..."></label>
+    <label>What do you need?<select><option>Emergency &mdash; please ring instead</option><option>Plumbing repair</option><option>Heating system</option><option>Bathroom</option><option>Kitchen</option><option>Extension</option><option>Loft or garage conversion</option><option>Outside work &mdash; paving, landscaping, roof</option><option>Something else</option></select></label>
+    <label>When are you looking to do it?<select><option>As soon as possible</option><option>Within a month</option><option>Within three months</option><option>Just getting prices for now</option></select></label>
+    <button class="btn" type="button">Send</button>
+    <div class="fnote">Concept form &mdash; not connected. Illustrative only.</div>
+  </div>
+  <p class="sh" style="margin-top:12px"><b>Note the last two questions.</b> They sort a &pound;200 tap from a
+  &pound;20,000 extension, and a customer who needs you today from one who is collecting prices &mdash; before you get
+  in the van.</p>
+</div></section>
+
+<footer><div class="wrap">
+  <b>Concept only.</b> This page was designed by AG1 Consulting for discussion with Adam Sessions and is not a live
+  website, not published, and not connected to any form, telephone or booking system. <b>It is a design proposal
+  showing what a website could look like &mdash; every claim, service description, town list, process step and item of
+  copy on it is illustrative and written by AG1, not supplied or approved by the business.</b> <b>The founding year of
+  1991, the family-run description, the services listed, the no-call-out-charge policy, the 24-hour availability and
+  the coverage of Derbyshire, Staffordshire and Leicestershire are reproduced from the company's own construction.co.uk
+  directory listing as read on 24 September 2026; that is third-party content AG1 did not write and has not verified,
+  and all of it should be confirmed before publication.</b> <b>The towns listed are nearby places offered as examples
+  for discussion; they are not a stated service area and should be replaced with the company's own list.</b> <b>Pricing,
+  response times, call-out terms, quotation practice and any other commitment shown are placeholders for discussion and
+  are not offers or commitments.</b> <b>No accreditation, registration, insurance or scheme membership is shown
+  anywhere on this page, because AG1 has not verified any and will not display credentials it has not confirmed.</b>
+  <b>No enquiry volume, ranking, conversion or revenue outcome is claimed, forecast or promised.</b> The telephone
+  number shown is the mobile number recorded for the business. Company names are used for identification only and
+  belong to their respective owners.
+</div></footer>
